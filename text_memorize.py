@@ -44,25 +44,25 @@ try:
                 print(current_line)
                 try:
                     attempt = raw_input('Enter the next missing word: ')
-                    reveal_next_word = False
                     if unicode(attempt,'utf-8') == missing_words[0]:
                         print("Correct! The word was '" + missing_words[0] + "'.")
-                        reveal_next_word = True
+                        if args.no_color:
+                            current_line = current_line.replace(''.join('_' for char in missing_words[0]),missing_words[0],1)
+                        else:
+                            current_line = current_line.replace(''.join('\033[91m_\033[0m' for char in missing_words[0]),missing_words[0],1)
                         missing_words.pop(0)
                         attempts = 0
                     elif args.attempts > 0 and attempts == args.attempts:
                         print("Too many attempts. The word was '" + missing_words[0] + "'.")
-                        reveal_next_word = True
+                        if args.no_color:
+                            current_line = current_line.replace(''.join('_' for char in missing_words[0]),missing_words[0],1)
+                        else:
+                            current_line = current_line.replace(''.join('\033[91m_\033[0m' for char in missing_words[0]),missing_words[0],1)
                         missing_words.pop(0)
                         attempts = 0
                     else:
                         print("Incorrect. Please try again.")
                         attempts += 1
-                    if reveal_next_word:
-                        if args.no_color:
-                            current_line = current_line.replace(''.join('_' for char in missing_words[0]),missing_words[0],1)
-                        else:
-                            current_line = current_line.replace(''.join('\033[91m_\033[0m' for char in missing_words[0]),missing_words[0],1)
                 except:
                     sys.exit(0)
 except IOError:
