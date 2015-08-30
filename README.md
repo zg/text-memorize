@@ -1,5 +1,7 @@
 text-memorize
 -------------
+[![asciicast](https://asciinema.org/a/984avh6xfeaqxe8earjpg6xnn.png)](https://asciinema.org/a/984avh6xfeaqxe8earjpg6xnn)
+
 A tool to help memorize some text!
 
 When provided with a file, this program will remove random words from each line of text and ask you to provide the words that were removed.
