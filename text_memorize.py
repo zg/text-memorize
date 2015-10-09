@@ -21,6 +21,14 @@ parser.add_argument('--n', dest='num', default=0,
                     help=('number of words to remove from each line '
                          '(0 for random number of removals, default: 0)'))
 
+parser.add_argument('--l', dest='lower', default=1,
+                    help=('lower bound on number of words to remove '
+                         '(inclusive, default: 1)'))
+
+parser.add_argument('--u', dest='upper', default=0,
+                    help=('upper bound on number of words to remove '
+                         '(inclusive, 0 for no upper bound, default: 0)'))
+
 parser.add_argument('filename', metavar='filename', type=str,
                     help='the text file')
 
@@ -38,9 +46,12 @@ try:
             if int(args.num):
                 num = int(args.num)
             else:
-                #num is in the range [1,len(split_line)], so at least
-                #one word will be removed.
-                num = random.randrange(len(split_line))+1
+                if args.upper:
+                    upper = int(args.upper)+1
+                else:
+                    upper = len(split_line)+1
+
+                num = random.randrange(start=int(args.lower), stop=upper)
 
             words = [False]*num
             diff = len(split_line)-num
