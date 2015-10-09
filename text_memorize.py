@@ -63,6 +63,8 @@ try:
                     guess = raw_input('Enter the next missing word: ')
                 except KeyboardInterrupt:
                     sys.exit(0)
+                except EOFError:
+                    sys.exit(0)
 
                 if unicode(guess,'utf-8') == next_word:
                     print("Correct! The word was '" + next_word + "'.")
