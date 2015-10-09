@@ -13,9 +13,21 @@ each line of text and ask you to provide the words that were removed.""")
 parser.add_argument('--no-color', action='store_true',
                     help='hide colorful underlining')
 
-parser.add_argument('--a', dest='tries', default=3,
+parser.add_argument('--a', dest='tries', type=int, default=3,
                     help=('number of tries to allow per word '
                          '(0 for unlimited tries, default: 3)'))
+
+parser.add_argument('--n', dest='num', type=int, default=0,
+                    help=('number of words to remove from each line '
+                         '(0 for random number of removals, default: 0)'))
+
+parser.add_argument('--l', dest='lower', type=int, default=1,
+                    help=('lower bound on number of words to remove '
+                         '(inclusive, default: 1)'))
+
+parser.add_argument('--u', dest='upper', type=int, default=0,
+                    help=('upper bound on number of words to remove '
+                         '(inclusive, 0 for no upper bound, default: 0)'))
 
 parser.add_argument('filename', metavar='filename', type=str,
                     help='the text file')
@@ -29,9 +41,26 @@ try:
         for line in f:
             missing_words = []
             new_word = u''
+            split_line = line.split(' ')
 
-            for word in line.split(' '):
-                show_word = random.randrange(10) > 4
+            if args.num:
+                num = args.num
+            else:
+                if args.upper:
+                    upper = args.upper + 1
+                else:
+                    upper = len(split_line) + 1
+
+                num = random.randrange(start=args.lower, stop=upper)
+
+            words = [False] * num
+            diff = len(split_line) - num
+            if diff > 0:
+                words.extend([True] * diff)
+                random.shuffle(words)
+
+            for i, word in enumerate(split_line):
+                show_word = words[i]
 
                 for char in word:
                     if (char.isalpha() and show_word) or not char.isalpha():
@@ -52,7 +81,7 @@ try:
                 if len(new_word):
                     missing_words.append(new_word)
                     new_word = u''
-            tries = 0
+            tries = 1
 
             while len(missing_words):
                 
@@ -81,6 +110,6 @@ try:
                     current_line = current_line.replace('\033[91m_\033[0m' * len(next_word),next_word,1)
 
                 missing_words.pop(0)
-                tries = 0
+                tries = 1
 except IOError:
     print("File not found: '{}'".format(args.filename))
