@@ -13,19 +13,19 @@ each line of text and ask you to provide the words that were removed.""")
 parser.add_argument('--no-color', action='store_true',
                     help='hide colorful underlining')
 
-parser.add_argument('--a', dest='tries', default=3,
+parser.add_argument('--a', dest='tries', type=int, default=3,
                     help=('number of tries to allow per word '
                          '(0 for unlimited tries, default: 3)'))
 
-parser.add_argument('--n', dest='num', default=0,
+parser.add_argument('--n', dest='num', type=int, default=0,
                     help=('number of words to remove from each line '
                          '(0 for random number of removals, default: 0)'))
 
-parser.add_argument('--l', dest='lower', default=1,
+parser.add_argument('--l', dest='lower', type=int, default=1,
                     help=('lower bound on number of words to remove '
                          '(inclusive, default: 1)'))
 
-parser.add_argument('--u', dest='upper', default=0,
+parser.add_argument('--u', dest='upper', type=int, default=0,
                     help=('upper bound on number of words to remove '
                          '(inclusive, 0 for no upper bound, default: 0)'))
 
@@ -43,15 +43,15 @@ try:
             new_word = u''
             split_line = line.split(' ')
 
-            if int(args.num):
-                num = int(args.num)
+            if args.num:
+                num = args.num
             else:
                 if args.upper:
-                    upper = int(args.upper)+1
+                    upper = args.upper+1
                 else:
                     upper = len(split_line)+1
 
-                num = random.randrange(start=int(args.lower), stop=upper)
+                num = random.randrange(start=args.lower, stop=upper)
 
             words = [False]*num
             diff = len(split_line)-num
