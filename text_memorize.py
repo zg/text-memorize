@@ -17,6 +17,10 @@ parser.add_argument('--a', dest='tries', default=3,
                     help=('number of tries to allow per word '
                          '(0 for unlimited tries, default: 3)'))
 
+parser.add_argument('--n', dest='num', default=0,
+                    help=('number of words to remove from each line '
+                         '(0 for random number of removals, default: 0)'))
+
 parser.add_argument('filename', metavar='filename', type=str,
                     help='the text file')
 
@@ -29,9 +33,23 @@ try:
         for line in f:
             missing_words = []
             new_word = u''
+            split_line = line.split(' ')
 
-            for word in line.split(' '):
-                show_word = random.randrange(10) > 4
+            if int(args.num):
+                num = int(args.num)
+            else:
+                #num is in the range [1,len(split_line)], so at least
+                #one word will be removed.
+                num = random.randrange(len(split_line))+1
+
+            words = [False]*num
+            diff = len(split_line)-num
+            if diff > 0:
+                words.extend([True]*diff)
+                random.shuffle(words)
+
+            for i, word in enumerate(split_line):
+                show_word = words[i]
 
                 for char in word:
                     if (char.isalpha() and show_word) or not char.isalpha():
