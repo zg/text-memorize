@@ -81,7 +81,7 @@ try:
                 if len(new_word):
                     missing_words.append(new_word)
                     new_word = u''
-            tries = 0
+            tries = 1
 
             while len(missing_words):
                 
@@ -108,6 +108,6 @@ try:
                     current_line = current_line.replace('\033[91m_\033[0m' * len(next_word),next_word,1)
 
                 missing_words.pop(0)
-                tries = 0
+                tries = 1
 except IOError:
     print("File not found: '{}'".format(args.filename))
