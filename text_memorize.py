@@ -47,16 +47,16 @@ try:
                 num = args.num
             else:
                 if args.upper:
-                    upper = args.upper+1
+                    upper = args.upper + 1
                 else:
-                    upper = len(split_line)+1
+                    upper = len(split_line) + 1
 
                 num = random.randrange(start=args.lower, stop=upper)
 
-            words = [False]*num
-            diff = len(split_line)-num
+            words = [False] * num
+            diff = len(split_line) - num
             if diff > 0:
-                words.extend([True]*diff)
+                words.extend([True] * diff)
                 random.shuffle(words)
 
             for i, word in enumerate(split_line):
