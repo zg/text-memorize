@@ -62,20 +62,27 @@ try:
             for i, word in enumerate(split_line):
                 show_word = words[i]
 
+                color_started = False
+
                 for char in word:
                     if (char.isalpha() and show_word) or not char.isalpha():
+                        if color_started:
+                            current_line += '\033[0m'
+                            color_started = False
+
                         current_line += char
                     else:
                         new_word += char
 
-                        if not args.no_color:
+                        if not color_started and not args.no_color:
                             current_line += '\033[91m'
+                            color_started = True
 
                         current_line += '_'
-
-                        if not args.no_color:
-                            current_line += '\033[0m'
                 if word[-1] != '\n':
+                    if color_started:
+                        current_line += '\033[0m'
+                        color_started = False
                     current_line += ' '
 
                 if len(new_word):
@@ -107,7 +114,7 @@ try:
                 if args.no_color:
                     current_line = current_line.replace('_' * len(next_word),next_word,1)
                 else:
-                    current_line = current_line.replace('\033[91m_\033[0m' * len(next_word),next_word,1)
+                    current_line = current_line.replace('\033[91m' + '_' * len(next_word) + '\033[0m',next_word,1)
 
                 missing_words.pop(0)
                 tries = 1
