@@ -3,6 +3,7 @@
 
 import argparse
 import codecs
+import os
 import random
 import sys
 
@@ -33,6 +34,9 @@ parser.add_argument('filename', metavar='filename', type=str,
                     help='the text file')
 
 args = parser.parse_args()
+
+if os.name == 'nt':
+    args.no_color = True
 
 try:
     with codecs.open(args.filename, 'r', 'utf-8') as f:
