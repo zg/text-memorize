@@ -39,12 +39,22 @@
 
 <p>When provided with a file, this program will remove random words from each line of text and ask you to provide the words that were removed.</p>
 
-<p>You can specify the number of attempts you want to allow with the <code>--a</code> flag. To turn off colors, just send in the <code>--no-color</code> flag.</p>
+<p>You can provide lower and upper bounds to the number of words removed per line by using the <code>--l</code> and/or <code>--u</code> flags, or remove an exact number with <code>--n</code>.  You can also specify the number of attempts you want to allow with the <code>--a</code> flag. To turn off colors, just send in the <code>--no-color</code> flag.</p>
+
+<p>text-memorize uses Python 2.7.</p>
 
 <h3>
 <a id="how-to-run" class="anchor" href="#how-to-run" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to run</h3>
 
 <p><code>python text_memorize.py filename</code></p>
+
+<p>For between <em>i</em> and <em>j</em> words removed per line:</p>
+
+<p><code>python text_memorize.py --l i --u j filename</code></p>
+
+<p>For exactly <em>k</em> words removed per line:</p>
+
+<p><code>python text_memorize.py --n k filename</code></p>
 
 <p>For infinite attempts:</p>
 
