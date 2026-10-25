@@ -60,6 +60,29 @@ class TextMemorizeTest(unittest.TestCase):
             self.assertNotIn('\033[', result.stdout)
         else:
             self.assertIn('\033[91m_____\033[0m', result.stdout)
+    def test_missed_words_listed(self):
+        path = os.path.join(TEXTS, 'english.txt')
+        words = list(words_of(path))
+        # 'quick' is missed once then guessed; 'fox' is revealed after 3 tries.
+        answers = (words[:1] + ['wrong', 'quick'] + words[2:3] +
+                   ['x', 'x', 'x'] + words[4:])
+        result = run(['--no-color', '--n', '1000', path],
+                     stdin='\n'.join(answers) + '\n')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('Words to practice: quick, fox', result.stdout)
+
+    def test_no_missed_words(self):
+        path = os.path.join(TEXTS, 'english.txt')
+        result = run(['--no-color', '--n', '1000', path],
+                     stdin='\n'.join(words_of(path)) + '\n')
+        self.assertNotIn('Words to practice', result.stdout)
+
+    def test_missed_words_listed_on_eof(self):
+        path = os.path.join(TEXTS, 'english.txt')
+        result = run(['--no-color', '--n', '1000', '--a', '1', path],
+                     stdin='wrong\n')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('Words to practice: The', result.stdout)
 
     def test_eof_exits_cleanly(self):
         result = run([os.path.join(TEXTS, 'english.txt')])
