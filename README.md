@@ -31,6 +31,10 @@ Without color:
 `python text_memorize.py --no-color filename`
 
 
+### Tests
+
+GitHub Actions runs the tests on Linux, macOS and Windows for every push to `main` and every pull request.
+
 ### Contribute
 
 Contributions are welcome! Just open a pull request and I'll attend to it as soon as possible.
