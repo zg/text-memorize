@@ -21,6 +21,12 @@ text works in the console. If you pipe answers in, set
 `PYTHONIOENCODING=utf-8` (or run `python -X utf8`) so the piped text is
 read as UTF-8.
 
+The classic console window can only show characters its font has; anything
+else appears as `?`. text-memorize prints a warning when the console font
+can't display the text you're memorizing. Pick a font such as Consolas or
+Cascadia Mono (right-click the title bar, then Properties > Font), or use
+Windows Terminal, which falls back to other fonts automatically.
+
 ### How to run
 
 `python3 text_memorize.py filename`
