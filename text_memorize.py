@@ -55,6 +55,16 @@ def enable_windows_ansi():
 if os.name == 'nt' and not args.no_color and not enable_windows_ansi():
     args.no_color = True
 
+
+missed_words = []
+
+
+def print_missed_words():
+    if missed_words:
+        print()
+        print('Words to practice: ' + ', '.join(missed_words))
+
+
 try:
     with open(args.filename, encoding='utf-8') as f:
         current_line = ''
@@ -118,10 +128,12 @@ try:
 
                 try:
                     guess = input('Enter the next missing word: ')
-                except KeyboardInterrupt:
+                except (KeyboardInterrupt, EOFError):
+                    print_missed_words()
                     sys.exit(0)
-                except EOFError:
-                    sys.exit(0)
+
+                if guess != next_word and next_word not in missed_words:
+                    missed_words.append(next_word)
 
                 if guess == next_word:
                     print("Correct! The word was '" + next_word + "'.")
@@ -139,5 +151,7 @@ try:
 
                 missing_words.pop(0)
                 tries = 1
+
+    print_missed_words()
 except FileNotFoundError:
     print("File not found: '{}'".format(args.filename))

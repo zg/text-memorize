@@ -8,6 +8,8 @@ When provided with a file, this program will remove random words from each line 
 
 You can provide lower and upper bounds to the number of words removed per line by using the `--l` and/or `--u` flags, or remove an exact number with `--n`.  You can also specify the number of attempts you want to allow with the `--a` flag. To turn off colors, just send in the `--no-color` flag.
 
+When you finish (or quit with Ctrl-C/Ctrl-D), text-memorize lists every word you guessed wrong at least once so you know what to practice.
+
 text-memorize requires Python 3.
 
 ### Windows
