@@ -10,6 +10,15 @@ You can provide lower and upper bounds to the number of words removed per line b
 
 text-memorize requires Python 3.
 
+### Windows
+
+Use Python 3.10 or later. Colors work in Windows Terminal and in the
+Windows 10/11 console; on older consoles, or when output is redirected,
+text-memorize turns colors off automatically. Russian and other non-ASCII
+text works in the console. If you pipe answers in, set
+`PYTHONIOENCODING=utf-8` (or run `python -X utf8`) so the piped text is
+read as UTF-8.
+
 ### How to run
 
 `python3 text_memorize.py filename`
