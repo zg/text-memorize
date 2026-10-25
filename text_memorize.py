@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
 import random
 import sys
 
@@ -31,6 +32,28 @@ parser.add_argument('filename', metavar='filename', type=str,
                     help='the text file')
 
 args = parser.parse_args()
+
+
+def enable_windows_ansi():
+    """Turn on ANSI escape handling in the Windows console.
+
+    Windows 10 and later understand the color codes, but only once the
+    program asks for it. Returns False when stdout is not a console or the
+    console is too old.
+    """
+    import ctypes
+    kernel32 = ctypes.windll.kernel32
+    handle = kernel32.GetStdHandle(-11)  # STD_OUTPUT_HANDLE
+    mode = ctypes.c_uint32()
+    if not kernel32.GetConsoleMode(handle, ctypes.byref(mode)):
+        return False
+    ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004
+    return bool(kernel32.SetConsoleMode(
+        handle, mode.value | ENABLE_VIRTUAL_TERMINAL_PROCESSING))
+
+
+if os.name == 'nt' and not args.no_color and not enable_windows_ansi():
+    args.no_color = True
 
 try:
     with open(args.filename, encoding='utf-8') as f:

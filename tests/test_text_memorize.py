@@ -50,6 +50,17 @@ class TextMemorizeTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout.count('Too many tries'), 9)
 
+    def test_color(self):
+        path = os.path.join(TEXTS, 'english.txt')
+        result = run(['--n', '1000', path], stdin='The\n')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        if os.name == 'nt':
+            # stdout is a pipe, not a console, so colors are turned off
+            # rather than printed as raw escape codes.
+            self.assertNotIn('\033[', result.stdout)
+        else:
+            self.assertIn('\033[91m_____\033[0m', result.stdout)
+
     def test_eof_exits_cleanly(self):
         result = run([os.path.join(TEXTS, 'english.txt')])
         self.assertEqual(result.returncode, 0, result.stderr)
