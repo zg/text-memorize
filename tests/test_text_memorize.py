@@ -1,3 +1,4 @@
+import ast
 import os
 import subprocess
 import sys
@@ -84,6 +85,11 @@ class TextMemorizeTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('Words to practice: The', result.stdout)
 
+    def test_no_font_warning_without_console_window(self):
+        # Under CI stdout is a pipe, so the font check must stay quiet.
+        result = run([os.path.join(TEXTS, 'ch1_1.txt')])
+        self.assertNotIn('Warning', result.stderr)
+
     def test_eof_exits_cleanly(self):
         result = run([os.path.join(TEXTS, 'english.txt')])
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -93,6 +99,41 @@ class TextMemorizeTest(unittest.TestCase):
             missing = os.path.join(d, 'missing.txt')
             result = run([missing])
         self.assertIn('File not found', result.stdout)
+
+
+def load_functions(*names):
+    """Pull top-level functions out of the script without running it."""
+    with open(SCRIPT, encoding='utf-8') as f:
+        tree = ast.parse(f.read())
+    body = [node for node in tree.body
+            if isinstance(node, ast.FunctionDef) and node.name in names]
+    namespace = {}
+    exec(compile(ast.Module(body=body, type_ignores=[]), SCRIPT, 'exec'),
+         namespace)
+    return [namespace[name] for name in names]
+
+
+@unittest.skipUnless(os.name == 'nt', 'console fonts are Windows-only')
+class UndisplayableTest(unittest.TestCase):
+    def setUp(self):
+        (self.undisplayable,) = load_functions('undisplayable')
+
+    def test_raster_font_uses_code_page(self):
+        # Raster fonts have exactly the glyphs of the console code page.
+        self.assertEqual(self.undisplayable('Привет', 'Terminal', False, 437),
+                         list('Привет'))
+        self.assertEqual(self.undisplayable('Привет', 'Terminal', False, 866),
+                         [])
+
+    def test_truetype_font_glyphs(self):
+        self.assertEqual(self.undisplayable('Привет', 'Consolas', True, 437),
+                         [])
+        self.assertEqual(self.undisplayable('日本', 'Consolas', True, 437),
+                         list('日本'))
+
+    def test_ascii_is_never_reported(self):
+        self.assertEqual(self.undisplayable('hello', 'Terminal', False, 437),
+                         [])
 
 
 if __name__ == '__main__':
