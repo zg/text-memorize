@@ -1,8 +1,6 @@
-#!/usr/bin/python
-# coding=utf-8
+#!/usr/bin/env python3
 
 import argparse
-import codecs
 import random
 import sys
 
@@ -35,12 +33,12 @@ parser.add_argument('filename', metavar='filename', type=str,
 args = parser.parse_args()
 
 try:
-    with codecs.open(args.filename, 'r', 'utf-8') as f:
+    with open(args.filename, encoding='utf-8') as f:
         current_line = ''
 
         for line in f:
             missing_words = []
-            new_word = u''
+            new_word = ''
             split_line = line.split(' ')
 
             if args.num:
@@ -87,7 +85,7 @@ try:
 
                 if len(new_word):
                     missing_words.append(new_word)
-                    new_word = u''
+                    new_word = ''
             tries = 1
 
             while len(missing_words):
@@ -96,13 +94,13 @@ try:
                 print(current_line)
 
                 try:
-                    guess = raw_input('Enter the next missing word: ')
+                    guess = input('Enter the next missing word: ')
                 except KeyboardInterrupt:
                     sys.exit(0)
                 except EOFError:
                     sys.exit(0)
 
-                if unicode(guess,'utf-8') == next_word:
+                if guess == next_word:
                     print("Correct! The word was '" + next_word + "'.")
                 elif args.tries and tries == args.tries:
                     print("Too many tries. The word was '" + next_word + "'.")
@@ -118,5 +116,5 @@ try:
 
                 missing_words.pop(0)
                 tries = 1
-except IOError:
+except FileNotFoundError:
     print("File not found: '{}'".format(args.filename))
