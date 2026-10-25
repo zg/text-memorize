@@ -33,6 +33,8 @@ Without color:
 
 ### Tests
 
+`python3 -m unittest discover tests`
+
 GitHub Actions runs the tests on Linux, macOS and Windows for every push to `main` and every pull request.
 
 ### Contribute
